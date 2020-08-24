@@ -1,0 +1,16 @@
+.idea/
+.env
+**/__pycache__
+**/.ipynb_checkpoints
+**/.DS_Store
+
+
+article_scraping/paper_data
+
+classifier/**/
+classifier/all_papers.py
+
+tagtog/**/
+
+rough/
+bangladesh_flood_venv/
