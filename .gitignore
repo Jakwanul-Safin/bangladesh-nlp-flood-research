@@ -6,6 +6,7 @@
 
 
 article_scraping/paper_data
+article_scraping/all_sites.json
 
 classifier/**/
 classifier/all_papers.py

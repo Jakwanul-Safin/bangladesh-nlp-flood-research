@@ -53,7 +53,7 @@ def get_soup(site, selenium=False):
     return soup
 
 if __name__=='__main__':
-    site = 'http://www.theindependentbd.com/post/48397'
+    site = 'http://www.theindependentbd.com/post/188810'
     meta = {'datePublished':'TRIAL'}
-    soup = get_soup(site)
+    soup = get_soup(site, True)
     print(theIndependentScrape(soup, meta))

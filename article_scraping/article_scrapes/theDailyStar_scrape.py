@@ -1,4 +1,7 @@
 from unidecode import unidecode
+import requests
+from selenium import webdriver
+from bs4 import BeautifulSoup
 
 def theDailyStarScrape(soup, meta):
     headline = soup.find('h1', itemprop='headline')
@@ -17,8 +20,8 @@ def theDailyStarScrape(soup, meta):
         textp = text.find_all('p')
         if textp: text = ' '.join([p.text for p in textp])
 
+    if not text: text = ''
     if headline: headline = unidecode(headline)
-    if authors: authors = unidecode(authors)
     if text: text = unidecode(text)
 
     return {
@@ -26,3 +29,22 @@ def theDailyStarScrape(soup, meta):
         'authors': authors,
         'text': 'Date Published:{}      \n'.format(meta['datePublished']) + text
     }
+
+def get_soup(site, selenium=False):
+    if selenium:
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        driver = webdriver.Chrome(executable_path='/Applications/chromedriver', options=options)
+        driver.get(site)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        # open('trial.html','w').write(driver.page_source)
+    else:
+        page = requests.get(site)
+        soup = BeautifulSoup(page.text, 'html.parser')
+    return soup
+
+if __name__=='__main__':
+    site = 'https://www.thedailystar.net/bangladesh-national-election-2018/news/bnp-gives-5-seats-ldp-1670998'
+    meta = {'datePublished':'TRIAL'}
+    soup = get_soup(site)
+    print(theDailyStarScrape(soup, meta))

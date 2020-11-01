@@ -71,17 +71,20 @@ def get_all_paper_data() -> None:
     """
     save_folder = os.path.join(root_folder,'all_paper_data')
     folders = [f for f in os.listdir(root_folder) if os.path.isdir(os.path.join(root_folder,f))]
-    folders.remove(save_folder)
-    folders.remove('__pycache__')
+    folders.remove('all_paper_data')
+    if os.path.join(root_folder,'__pycache__') in folders:
+        folders.remove(os.path.join(root_folder,'__pycache__'))
+    if '__pycache__' in folders:
+        folders.remove('__pycache__')
 
     for f in folders:
         file_name = f+'1_data.json'
         data_file = os.path.join(root_folder, f,file_name)
-        save_file = os.path.join(root_folder, save_folder,file_name)
+        save_file = os.path.join(save_folder,file_name)
         if os.path.exists(data_file): copyfile(data_file, save_file)
 
 
-def merge_paper_sites(paper_name: str, merged_file_num: Union[str, int]='first', delete_rest: bool=True) -> None:
+def merge_paper_sites(paper_name: str, merged_file_num: Union[str, int]='first', delete_rest: bool=True, ignore_files =None) -> None:
     """
     Merges sites from different site files into 1 file.
     :param paper_name: parse_paper_name()
@@ -89,10 +92,11 @@ def merge_paper_sites(paper_name: str, merged_file_num: Union[str, int]='first',
     :param delete_rest: delete rest of the files post merging the files
     :return: None
     """
+    if not ignore_files: ignore_files = []
     merged_file_num = parse_file_num(paper_name, merged_file_num)
     paper_name = parse_paper_name(paper_name)
     folder = '{}/{}/'.format(root_folder, paper_name)
-    sites_files = [f for f in os.listdir(folder) if 'sites' in f]
+    sites_files = [f for f in os.listdir(folder) if '_sites' in f not in ignore_files]
     all_data, all_sites = [],set()
     for site_file in sites_files:
         data = json.load(open(folder+site_file))
@@ -273,7 +277,7 @@ def iterate_all_papers(bangla=False, english=False):
     """
     if not bangla and not english: raise Exception('English or Bangla or both must be true')
     remove_folders = ['__pycache__', 'all_paper_data']
-    papers = [f for f in os.listdir(root_folder) if os.path.join(root_folder,os.path.isdir(f))]
+    papers = [f for f in os.listdir(root_folder) if os.path.isdir(os.path.join(root_folder,f))]
     bangla_papers = [f for f in papers if '-bangla' in f]
     if not bangla: remove_folders+=bangla_papers
     for remove_paper in remove_folders:
@@ -450,7 +454,7 @@ def scrape_inner(paper_name: str, paper_func: object, sites_i=None, debug: bool=
             continue
     if debug:
         debug_date = [s.replace('/','-') for s in sites_i['date_range']]
-        print('Query:{}. Date Range: {}-{}. Sites scraped: {}'.format(query, debug_date[0], debug_date[1], len(site_data)))
+        print('Query:{}. Date Range: {}-{}. Sites scraped: {}'.format(query[:50], debug_date[0], debug_date[1], len(site_data)))
         save_file = open(os.path.join(data_folder, 'query_{}.data_{}-{}.json'.format(query, debug_date[0], debug_date[1])), 'w')
         json.dump(site_data, save_file, indent=2)
         save_file.close()
@@ -494,17 +498,19 @@ def scrape_main(paper_name: str, data_file_num='first', site=None, debug=True, s
     paper_name = parse_paper_name(paper_name)
     data_file_num = parse_file_num(paper_name, data_file_num, file_type='data')
     site_file_num = parse_file_num(paper_name, site_file_num)
+
     data_folder_path = os.path.join(root_folder, paper_name,'data')
+    if os.path.isdir(data_folder_path): shutil.rmtree(data_folder_path)
+    os.mkdir(data_folder_path)
+
     sites_file_path = os.path.join(root_folder, paper_name, paper_name + site_file_num + '_sites.json')
     data_file_path = os.path.join(root_folder, paper_name, paper_name + data_file_num + '_data.json')
+
     main_data_file_path = os.path.join(root_folder, paper_name, paper_name + '1_data.json')
-    main_data_sites = None
+    main_data_sites = set()
     if os.path.exists(main_data_file_path):
         main_data_file = json.load(open(main_data_file_path))
         main_data_sites = set([i['meta']['link'] for i in main_data_file])
-
-    # if os.path.isdir(data_folder_path): shutil.rmtree(data_folder_path)
-    # os.mkdir(data_folder_path)
 
     site_file = open(sites_file_path)
     sites_i = json.load(site_file)
@@ -514,6 +520,9 @@ def scrape_main(paper_name: str, data_file_num='first', site=None, debug=True, s
         scrapped.extend(sites_data)
         if main_data_sites:  main_data_sites = main_data_sites.union(set([i['meta']['link'] for i in sites_data]))
         else: main_data_sites = set([i['meta']['link'] for i in sites_data])
+    scrapped = []
+    for file in [f for f in os.listdir(data_folder_path) if '.json' in f]:
+        scrapped.extend(json.load(open(os.path.join(data_folder_path, file))))
     print('Total Sites scrapped: {}'.format(len(scrapped)))
     save_file = open(data_file_path, 'w')
     json.dump(scrapped, save_file, indent=2)
@@ -616,7 +625,7 @@ def site_distribution():
             sites[year] = sites[year].union(set(query['sites']))
     site_counts = defaultdict(int)
     for k,v in sites.items(): site_counts[k]+=len(v)
-    for entry in json.load(open(os.path.join('all_paper_data/nytimes1_data.json'))):
+    for entry in json.load(open(os.path.join(root_folder, 'all_paper_data/nytimes1_data.json'))):
         try:
             year = dateparser.parse(entry['meta']['datePublished']).year
             site_counts[year]+=1
@@ -631,7 +640,7 @@ def site_distribution():
     plt.rcParams['font.size']=16
     plt.bar(list(site_counts.keys()), list(site_counts.values()))
     plt.xlabel('Year of Publishing')
-    plt.ylabel('# of Articles', labelpad=-870)
+    plt.ylabel('# of Articles', labelpad=-980)
     plt.title('# of Articles vs Year of Publishing')
     plt.savefig('site_distribution.png')
     # plt.tick_params(axis='y', which='right', labelleft='off', labelright='on')
@@ -647,20 +656,24 @@ def scraped_data_distribution():
     """
     data_year = defaultdict(int)
     data_year_month = defaultdict(int)
-    for filename in [os.path.join(root_folder, 'all_paper_data',f) for f in os.listdir('all_paper_data') if '.json' in f]:
+    for filename in [os.path.join(root_folder, 'all_paper_data',f)
+                     for f in os.listdir(os.path.join(root_folder, 'all_paper_data')) if '.json' in f]:
         js = json.load(open(filename))
         for entry in js:
-            datePublished = entry['meta']['datePublished']
-            if datePublished:
+            date = entry['meta']['datePublished']
+            if date:
                 try:
-                    datePublished = dateparser.parse(datePublished)
+                    datePublished = dateparser.parse(date, settings={'RELATIVE_BASE': datetime(1400, 1, 1)})
                     year, month = datePublished.year, datePublished.month
+                    if year < 1980: raise Exception('No Date Present', date)
+                    if year == 1400: raise Exception('No Year Present')
+                    if year > 2021: raise Exception('No Date Present', date)
                     data_year[year] += 1
                     year_month = '{}-{:02d}'.format(year,month)
                     data_year_month[year_month] += 1
                 except Exception as e:
                     print(e)
-                    print(datePublished, entry['id'], filename)
+                    print(date, entry['id'], filename)
                     continue
     total_data = {'data_year': data_year, 'data_year_month': data_year_month}
     json.dump(total_data, open('scraped_data_distribution.json', 'w'), indent=2)
@@ -672,7 +685,7 @@ def scraped_data_distribution():
     plt.bar([i[0] for i in year_l], [i[1] for i in year_l])
     plt.xlabel('Year of Publishing')
     plt.tick_params(axis='y', which='both', labelleft=False, labelright=True)
-    plt.ylabel('# of Articles', labelpad=-865)
+    plt.ylabel('# of Articles', labelpad=-980)
     plt.savefig('scraped_data_distribution.png')
     # plt.title('# of Articles scraped vs Year of Publishing')
     plt.show()
@@ -712,20 +725,25 @@ Completed:
 
 
 if __name__=='__main__':
-    # scrape_main('newAge')
+    # scrape_main('theIndependent', data_file_num='2', site_file_num='2', selenium=True)
     # print(get_last_date('bdnews'))
-    # scraped_data_distribution()
+    scraped_data_distribution()
     # get_all_paper_data()
     # get_all_sites()
-    # merge_paper_sites(site)
+    # paper_name = 'theNewNation'
+    # merge_paper_sites(paper_name, 2, True, ignore_files=['{}1_sites.json'.format(paper_name)])
     # generate_paper_index()
     # print(count_sites_all_paper(english=True))
     # for paper in iterate_all_papers(english=True):
     #     merge_paper_sites(paper)
+    # merge_paper_sites('theDailyStar')
     # scrape_main('dailySun', data_file_num='auto')
-
-    # merge_data_folder('dailySun')
+    # newspapers = ['bdnews', 'dailySun', 'prothomalo', 'dailyObserver', 'newAge',
+    #               'dhakaTribune', 'theDailyStar', 'theIndependent', 'theNewNation']
+    # for paper in newspapers:
+    #     merge_paper_sites(paper)
     # site_distribution()
+    # get_all_sites()
     pass
 
 # print('Bangla Sites:',count_sites_all_paper(bangla=True)
