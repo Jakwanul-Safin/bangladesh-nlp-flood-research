@@ -7,7 +7,7 @@ Train and test classifier. Time series plotting. Data Comparison
 ### Data
 Get data using `./get_classifier_data.sh`. 3 folders will be downloaded: data, other_data, timeseries_data.
 <br/> A soft link to all_papers.py and paper_data (if downloaded) from article_scraping folder will be added.
-<br/><span style="color:blue">Divisions (7): Barisal, Chittagong, Dhaka, Khulna, Rajshahi, Rangpur, Sylhet</span>
+<br/><span style="color:blue">Divisions (8): Barisal, Chittagong, Dhaka, Khulna, Mymensingh, Rajshahi, Rangpur, Sylhet</span>
 * data - Contains article data. Data loading methods can be found in functions.py and also in classifier.ipynnb
     * isflood.json - Contains is flood data
     * not_isflood.json - Contains not is flood data
