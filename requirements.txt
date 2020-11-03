@@ -8,6 +8,8 @@ botocore==1.17.0
 certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.2
+click-plugins==1.1.1
+cligj==0.7.0
 cycler==0.10.0
 datefinder==0.7.1
 dateparser==0.7.6
@@ -15,10 +17,12 @@ dbfread==2.0.7
 decorator==4.4.2
 docutils==0.15.2
 filelock==3.0.12
+Fiona==1.8.17
 Flask==1.1.2
 future==0.18.2
 fuzzysearch==0.7.3
 gensim==3.8.3
+geopandas==0.8.1
 google-search-results==1.8.1
 idna==2.9
 ipykernel==5.3.0
@@ -34,6 +38,7 @@ jupyter-core==4.6.3
 kiwisolver==1.2.0
 MarkupSafe==1.1.1
 matplotlib==3.2.2
+munch==2.5.0
 nltk==3.5
 numpy==1.18.5
 numpyencoder==0.2.0
@@ -47,6 +52,8 @@ ptyprocess==0.6.0
 pyaconf==0.7.0
 Pygments==2.6.1
 pyparsing==2.4.7
+pyproj==2.6.1.post1
+pyshp==2.1.2
 python-dateutil==2.8.1
 python-dotenv==0.13.0
 pytorch-transformers==1.2.0
@@ -59,8 +66,10 @@ s3transfer==0.3.3
 sacremoses==0.0.43
 scikit-learn==0.23.1
 scipy==1.4.1
+seaborn==0.11.0
 selenium==3.141.0
 sentencepiece==0.1.91
+Shapely==1.7.1
 six==1.15.0
 sklearn==0.0
 smart-open==2.0.0
@@ -78,3 +87,4 @@ Unidecode==1.1.1
 urllib3==1.25.9
 wcwidth==0.2.4
 Werkzeug==1.0.1
+xmltodict==0.12.0

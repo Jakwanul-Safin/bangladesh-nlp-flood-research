@@ -12,6 +12,7 @@ classifier/**/
 classifier/all_papers.py
 
 tagtog/**/
+tagtog/Shapefiles_Final_30_7_2020
 
 rough/
 bangladesh_flood_venv/

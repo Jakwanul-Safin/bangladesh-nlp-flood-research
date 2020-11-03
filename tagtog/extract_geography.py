@@ -28,7 +28,7 @@ def original_files(root_folder = 'geography_dbf'):
             if upa:
                 if dis and upa not in under_district[dis]: under_district[dis].append(upa)
                 upazila.add(upa)
-    print(district)
+    return division,district,upazila
 
 def shamnun_get_div(record):
     div = record.get('NAME_1', None)
@@ -60,7 +60,6 @@ def shammun_dbf_files(root_folder = 'shammun_geography_dbf', division_file='divi
         div = shamnun_get_div(record)
         division.add(div)
 
-    print(division)
     for record in DBF(district_file_path, parserclass=MyFieldParser):
         div = shamnun_get_div(record)
         if div not in division: raise Exception('Incorrect division in district.dbf', div)
@@ -68,7 +67,6 @@ def shammun_dbf_files(root_folder = 'shammun_geography_dbf', division_file='divi
         district.add(dist)
         under_division[div].append(dist)
 
-    print(district)
     for record in DBF(upazila_file_path, parserclass=MyFieldParser):
         div = shamnun_get_div(record)
         if div not in division: raise Exception('Incorrect division in district.dbf', div)
@@ -77,5 +75,4 @@ def shammun_dbf_files(root_folder = 'shammun_geography_dbf', division_file='divi
         upa = shamnun_get_upa(record)
         upazila.add(upa)
         under_district[dist].append(upa)
-    print(upazila)
 # shammun_dbf_files()

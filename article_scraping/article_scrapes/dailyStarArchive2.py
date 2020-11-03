@@ -114,6 +114,7 @@ if __name__=='__main__':
         if c in dates:
             dates.remove(c)
     print('Total Dates left:',len(dates))
+    # print(sorted(dates, key=lambda x:x.split('-')))
 
     for i,date in enumerate(dates):
         site = 'https://www.thedailystar.net/newspaper?date={}'.format(date)
