@@ -252,8 +252,6 @@ def add_datePublished(df_data):
 
 def get_dist_divD():
     under_division = json.load(open('timeseries_data/under_division.json'))
-    divisions_list = set(under_division.keys())
-    districts_list = set([a for f in under_division.values() for a in f])
     dist_to_div = {}
     for k,v in under_division.items():
         for dis in v:
@@ -264,25 +262,27 @@ def get_dist_divD():
 def add_location(df_data):
     div_to_dist, dist_to_div= get_dist_divD()
     divisions_list = set(div_to_dist.keys())
-    districts_list = set([a for f in div_to_dist.values() for a in f])
+    districts_list = set(dist_to_div.keys())
     districts, divisions = [], []
     unique_dists, unique_divisions = set(),set()
     for row in df_data.iterrows():
         try:
             text = row[1]['text']
-            dist, divs = [], []
+            dist, divs = set(), set()
             for d in districts_list:
                 if d.lower()=='dhaka':
-                    if re.match(r'\bdhaka\b(?!.*\btribune\b)', text.lower()):  dist.append('dhaka')
+                    if 'dhaka tribune' not in text.lower():
+                        dist.add('dhaka')
                 elif d.lower() in text.lower():
-                    dist.append(d.lower())
-                    divs.append(dist_to_div[d.lower()])
+                    dist.add(d.lower())
+                    divs.add(dist_to_div[d.lower()])
             for d in divisions_list:
                 if d.lower()=='dhaka':
-                    if re.match(r'\bdhaka\b(?!.*\btribune\b)', text.lower()): divs.append('dhaka')
-                elif d.lower() in text.lower(): divs.append(d.lower())
-            districts.append(dist)
-            divisions.append(divs)
+                    if 'dhaka tribune' not in text.lower():
+                        divs.add('dhaka')
+                elif d.lower() in text.lower(): divs.add(d.lower())
+            districts.append(list(dist))
+            divisions.append(list(divs))
         except Exception as e:
             print(e, row[1]['doc_id'], row[1]['newspaper'])
             districts.append([])
