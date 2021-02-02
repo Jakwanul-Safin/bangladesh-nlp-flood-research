@@ -1,7 +1,7 @@
-AnnComplete:                            python tagtog_website.py search anncomplete:true --user tvp2107 --project bangladesh_floods --owner ikhomyakov > trial.json
+ AnnComplete:                            python tagtog_website.py search anncomplete:true --user tvp2107 --project bangladesh_floods --owner ikhomyakov > trial.json
 AnnComplete + is_flood:                 python tagtog_website.py search anncomplete:true label:is_flood:true --user tvp2107 --project bangladesh_floods --owner ikhomyakov > trial.json
 Download AnnComplete + is_flood:        python tagtog_website.py download anncomplete:true label:is_flood:true --user tvp2107 --project bangladesh_floods --owner ikhomyakov --output_folder output > trial.json
 Download AnnComplete:                   python tagtog_website.py download anncomplete:true --user tvp2107 --project bangladesh_floods --owner ikhomyakov --output_folder output
 Download AnnComplete + is_flood:Shammun python tagtog_website.py download members_anncomplete:shammun AND folder:is_flood --user tvp2107 --project bangladesh_floods --owner ikhomyakov --output_folder output --member shammun
-Upload from upload folder               python tagtog_website.py upload upload/ --user tvp2107 --project bangladesh_floods --owner ikhomyakov --folder is_flood3
+Upload from upload folder               python tagtog_website.py upload upload/ --user tvp2107 --project bangladesh_floods --owner ikhomyakov --folder is_flood_new
 

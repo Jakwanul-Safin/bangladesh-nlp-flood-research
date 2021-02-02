@@ -223,6 +223,87 @@ def gen_filespath_generator(path, extension):
         return []  # resilient
 
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+# def print_upload(args):
+#     filepath_iterator = gen_filepaths_generator(args.paths, args.extension)
+
+#     batch_size = args.batch_size if args.output == "null" else 1
+#     MAX_NUM_CONSECUTIVE_ERRORS = 3
+
+#     num_uploaded_files = 0
+#     num_consecutive_errors = 0
+
+#     batch_index = 0
+#     completed = set()
+#     files = []
+#     while batch_index < len(filepath_iterator):
+#         filepath = filepath_iterator[batch_index]
+#         if filepath not in completed:
+#             completed.add(filepath)
+#             files.append(("files", open(filepath, "rb")))
+#             if '.ann.json' in filepath:
+#                 trial_filepath = filepath.replace('.ann.json','.txt')
+#                 if trial_filepath in filepath_iterator:
+#                     if trial_filepath not in completed:
+#                         completed.add(trial_filepath)
+#                         files.append(("files", open(trial_filepath, "rb")))
+#                         batch_index += 1
+#         batch_index += 1
+#         if len(files)==5 or len(files)==10:
+#             response = requests.put(args.req_url, params=args.req_params, auth=args.req_auth, files=files, verify=args.verify_ssl)
+#             print("batch", batch_index, response.status_code, response.reason)
+#             print("\t" + response.text)
+#             if response.ok:
+#                 num_consecutive_errors = 0
+#             else:
+#                 print("\tERROR; could not upload the files")
+
+#                 num_consecutive_errors += 1
+#                 if num_consecutive_errors == MAX_NUM_CONSECUTIVE_ERRORS:
+#                     print("FATAL; too many consecutive failed requireds")
+#                     sys.exit(-1)
+#             files = []
+# #         elif len(files)>10:
+# #             print("BAD FILE NUMBER")
+# #             sys.exit(-1)
+
+
+
+# def print_ids_upload(args):
+#     response = requests.put(args.req_url, params=args.req_params, auth=args.req_auth, verify=args.verify_ssl)
+#     print(response)
+
+
+# def gen_filepaths_generator(paths, extension):
+#     generator = []
+#     for path in paths:
+#         p = gen_filespath_generator(path, extension)
+#         for pp in p:
+#             generator.append(pp)
+#     return generator
+
+
+# def gen_filespath_generator(path, extension):
+#     if os.path.isfile(path):
+#         return [path]
+#     elif os.path.isdir(path):
+#         if sys.version_info.minor >= 5:  # >= Python 3.5
+#             return (subpath for subpath in glob.iglob(path + "/**/*" + extension, recursive=True) if os.path.isfile(subpath))
+#         else:
+#             return (os.path.join(root, filename) for root, dirnames, filenames in os.walk(path) for filename in fnmatch.filter(filenames, "*" + extension))
+#     else:
+#         print("warning, cannot read:", path)
+#         return []  # resilient
+
 # -----------------------------------------------------------------------------------------------------------------
 
 

@@ -109,7 +109,9 @@ if __name__=='__main__':
                 key = str(i) + '-' + '{:02d}'.format(months) + '-' + '{:02d}'.format(day)
                 dates.append(key)
     data = json.load(open('../paper_data/thedailystar/theDailyStar3_data.json'))
-    currectDates = [str(d['meta']['datePublished']).split('T')[0] for d in data]
+    datesData = json.load(open('../paper_data/thedailystar/theDailyStar3_dates.json'))
+    currectDates = [str(d['meta']['datePublished']).split('T')[0] for d in datesData]
+    currectDates += [str(d['meta']['datePublished']).split('T')[0] for d in data]
     for c in currectDates:
         if c in dates:
             dates.remove(c)

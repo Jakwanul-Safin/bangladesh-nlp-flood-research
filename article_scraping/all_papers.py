@@ -64,7 +64,7 @@ def parse_file_num(paper_name: str, merged_file_num: Union[str,int]='auto', file
     return str(merged_file_num)
 
 
-def get_all_paper_data() -> None:
+def get_all_paper_data(all_data_files = True) -> None:
     """
     Copies files labelled <paper_name>1_data.json from all newspapers to all_paper_data folder
     :return: None
@@ -78,10 +78,14 @@ def get_all_paper_data() -> None:
         folders.remove('__pycache__')
 
     for f in folders:
-        file_name = f+'1_data.json'
-        data_file = os.path.join(root_folder, f,file_name)
-        save_file = os.path.join(save_folder,file_name)
-        if os.path.exists(data_file): copyfile(data_file, save_file)
+        if all_data_files:
+            data_files = [ff for ff in os.listdir(os.path.join(root_folder,f)) if '_data' in ff]
+        else:
+            data_files = [f+'1_data.json']
+        for file_name in data_files:
+            data_file = os.path.join(root_folder, f,file_name)
+            save_file = os.path.join(save_folder,file_name)
+            if os.path.exists(data_file): copyfile(data_file, save_file)
 
 
 def merge_paper_sites(paper_name: str, merged_file_num: Union[str, int]='first', delete_rest: bool=True, ignore_files =None) -> None:
@@ -667,7 +671,7 @@ def scraped_data_distribution():
                     year, month = datePublished.year, datePublished.month
                     if year < 1980: raise Exception('No Date Present', date)
                     if year == 1400: raise Exception('No Year Present')
-                    if year > 2021: raise Exception('No Date Present', date)
+                    if year > 2020: raise Exception('No Date Present', date)
                     data_year[year] += 1
                     year_month = '{}-{:02d}'.format(year,month)
                     data_year_month[year_month] += 1
