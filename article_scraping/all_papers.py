@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from typing import Union, Optional
 from selenium import webdriver
 
-root_folder = 'paper_data'
+root_folder = '/Users/tejitpabari/Desktop/BangladeshFloodResearch/nlp_flood_research/article_scraping/paper_data'
 
 def parse_paper_name(paper_name: Union[str, int]) -> str:
     """
@@ -64,7 +64,7 @@ def parse_file_num(paper_name: str, merged_file_num: Union[str,int]='auto', file
     return str(merged_file_num)
 
 
-def get_all_paper_data() -> None:
+def get_all_paper_data(all_data_files = True) -> None:
     """
     Copies files labelled <paper_name>1_data.json from all newspapers to all_paper_data folder
     :return: None
@@ -78,10 +78,14 @@ def get_all_paper_data() -> None:
         folders.remove('__pycache__')
 
     for f in folders:
-        file_name = f+'1_data.json'
-        data_file = os.path.join(root_folder, f,file_name)
-        save_file = os.path.join(save_folder,file_name)
-        if os.path.exists(data_file): copyfile(data_file, save_file)
+        if all_data_files:
+            data_files = [ff for ff in os.listdir(os.path.join(root_folder,f)) if '_data' in ff]
+        else:
+            data_files = [f+'1_data.json']
+        for file_name in data_files:
+            data_file = os.path.join(root_folder, f,file_name)
+            save_file = os.path.join(save_folder,file_name)
+            if os.path.exists(data_file): copyfile(data_file, save_file)
 
 
 def merge_paper_sites(paper_name: str, merged_file_num: Union[str, int]='first', delete_rest: bool=True, ignore_files =None) -> None:
@@ -284,6 +288,14 @@ def iterate_all_papers(bangla=False, english=False):
         if remove_paper in papers: papers.remove(remove_paper)
     for paper in papers:
         yield paper
+
+def iterate_all_paper_data(data=False):
+    folder_path = os.path.join(root_folder, 'all_paper_data')
+    for f in os.listdir(folder_path):
+        fp = os.path.join(folder_path, f)
+        if '.json' in f:
+            if data: yield json.load(open(fp))
+            else: yield fp
 
 
 def generate_paper_index():
@@ -566,7 +578,7 @@ def make_newspaper_filename(filename: str):
     elif '.ann' in filename or '.txt' in filename or '.json' in filename: return None
     else: return filename
 
-def get_id_data(paper_name: str, query_id=None, connect_filename=None, query_term='all', debug=True):
+def get_id_data(query_id=None, connect_filename=None, query_term='all', debug=True):
     """
     given an id or connect_filename, get data related to it
     :param paper_name:
@@ -576,23 +588,21 @@ def get_id_data(paper_name: str, query_id=None, connect_filename=None, query_ter
     :param debug:
     :return:
     """
-    paper_name = parse_paper_name(paper_name)
-    data = json.load(open(os.path.join(root_folder, 'all_paper_data',paper_name+'1_data.json')))
     data_id = None
-    if query_id:
-        for d in data:
-            if d['id']==query_id:
-                data_id=d
-                break
-        if not data_id: raise Exception('ID: {} not found in paper: {}'.format(query_id, paper_name))
-    elif connect_filename:
-        for d in data:
-            if 'connect_filename' in d and d['connect_filename']==connect_filename:
-                data_id=d
-                break
-        if not data_id: raise Exception('Connect_filename: {} not found in paper: {}'.format(connect_filename, paper_name))
-    else: raise Exception('Please enter a query_id or a connect_filename')
-
+    for data in iterate_all_paper_data(data=True):
+    # data = json.load(open(os.path.join(root_folder, 'all_paper_data',paper_name+'1_data.json')))
+        if query_id:
+            for d in data:
+                if d['id']==query_id:
+                    data_id=d
+                    break
+        elif connect_filename:
+            for d in data:
+                if 'connect_filename' in d and d['connect_filename']==connect_filename:
+                    data_id=d
+                    break
+        else: raise Exception('Please enter a query_id or a connect_filename')
+    if not data_id: raise Exception('ID: {} not found'.format(query_id))
 
     if query_term=='all': return data_id
     else:
@@ -667,7 +677,7 @@ def scraped_data_distribution():
                     year, month = datePublished.year, datePublished.month
                     if year < 1980: raise Exception('No Date Present', date)
                     if year == 1400: raise Exception('No Year Present')
-                    if year > 2021: raise Exception('No Date Present', date)
+                    if year > 2020: raise Exception('No Date Present', date)
                     data_year[year] += 1
                     year_month = '{}-{:02d}'.format(year,month)
                     data_year_month[year_month] += 1

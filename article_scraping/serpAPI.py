@@ -136,18 +136,25 @@ def query_serp_count(query, site, dates, num_results, paper_name):
             # serpAPI query
             client = GoogleSearchResults(params)
             results = client.get_dict()
-            siteC = results['search_information'].get('total_results',0)
-            if siteC: siteC = int(siteC)
-            else: siteC = 0
 
-            query_r['site_count'] = siteC
+            news_results = results['news_results']
+
+            count = 0
+            while (news_results and len(news_results)>0) or ('error' not in results):
+                count+=len(news_results)
+                params['start'] = count
+                client = GoogleSearchResults(params)
+                results = client.get_dict()
+                news_results = results['news_results']
+
+            print('Date Range: {}-{}\tTotal Sites: {}'.format(d[0],d[1],count))
+            query_r['site_count'] = count
             siteCounts.append(query_r)
-            totalSites += siteC
+            totalSites += count
         except Exception as e:
             print(e)
             print(d)
             continue
-        if i%10==0: print('{} '.format(i),end='')
     print('\nTotal Sites: {}'.format(totalSites))
     return siteCounts
 
@@ -235,9 +242,9 @@ def SERP_Count(year_start, year_end, query, site, paper_name, num_results=100, s
 
 
 if __name__=='__main__':
-#     query_terms, isBangla = ['flood', 'floods', 'flooding', 'flooded', 'cyclone', 'inundation', 'innundated'], False
-#     divisions = ['barisal', 'chittagong', 'dhaka', 'khulna', 'rajshahi', 'rangpur', 'sylhet', 'mymensingh']
-#     locations = divisions + ['bangladesh']
+    query_terms, isBangla = ['flood', 'floods', 'flooding', 'flooded', 'cyclone', 'inundation', 'innundated'], False
+    divisions = ['barisal', 'chittagong', 'dhaka', 'khulna', 'rajshahi', 'rangpur', 'sylhet', 'mymensingh']
+    locations = divisions + ['bangladesh']
 #     # Form different types of queries
 #     query = '({}) ({})'.format(' OR '.join(locations), ' OR '.join(query_terms))
 #     num_results = 100
@@ -265,5 +272,5 @@ if __name__=='__main__':
     paper_name, site, skipDay = 'theIndependent', 'http://www.theindependentbd.com', 7
     num_results = 100
     year_start = 2014
-    year_end = 2017
+    year_end = 2016 # inclusive
     SERP_Count(year_start, year_end, query, site, paper_name, num_results, skipDay=skipDay)
