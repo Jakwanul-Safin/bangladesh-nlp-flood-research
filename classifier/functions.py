@@ -724,9 +724,10 @@ def plot_2timeseries(l1, l2, title='', xlabel='', xticks_rotate=False, skip=0, p
         for label in temp:
             label.set_visible(False)
     
-    xt = []
-    for i in range(year_range[0],year_range[1]+1): xt.extend([str(i)]*12)
-    ax1.set_xticklabels(xt)
+    if year_range:
+        xt = []
+        for i in range(year_range[0],year_range[1]+1): xt.extend([str(i)]*12)
+        ax1.set_xticklabels(xt)
     
     if yline:
         plt.axhline(yline)
