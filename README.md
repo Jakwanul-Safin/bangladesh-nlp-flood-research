@@ -11,5 +11,5 @@ After that, install python packages using `pip install -r requirements.txt`
 ## Folders
 * article_scraping - article scraping from serpAPI + graphs for article distributions.
 * classifier - classifier + timeseries + compare data
-* tagotg - tagtog data + shape file
+* tagtog - tagtog data + shape file
 * reading - research papers and reports
