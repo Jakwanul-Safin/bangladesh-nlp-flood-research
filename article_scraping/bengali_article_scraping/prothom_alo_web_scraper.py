@@ -1,3 +1,6 @@
+"""Scraper for the Prothom Alo website. Can successfully scrape topic and search pages as
+of 6/3/2021."""
+
 import sys, os
 from bs4 import BeautifulSoup
 
