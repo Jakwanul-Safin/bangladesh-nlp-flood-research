@@ -133,6 +133,10 @@ def query_SERP(query:str, site:str, dates:list=[(None, None)], num_results:int=1
     
     overlap = 0
     results = {}
+<<<<<<< HEAD
+=======
+    priorCount = 0
+>>>>>>> decc4f05f788897bd000116e12db1a50840c7526
     for d in dates:
         try:
             # Get query dict and params dict
@@ -140,7 +144,10 @@ def query_SERP(query:str, site:str, dates:list=[(None, None)], num_results:int=1
                                           num_results=num_results, paper=paper_name, search_news=search_news)
 
             count = 0
+<<<<<<< HEAD
             priorCount = 0
+=======
+>>>>>>> decc4f05f788897bd000116e12db1a50840c7526
             # Loop through till end of search results or error encountered
             while LIMIT_COUNT > 0:
                 LIMIT_COUNT -= 1
@@ -206,7 +213,7 @@ def default_search_dates():
 def run(query = "জলমগ্ন OR জোয়ারের OR প্লাবিত OR বন্যা", dates = default_search_dates()):
     for paper_name, site in names_site.items():
         logger.info("Scrapping {} articles from {}".format(paper_name, site))
-        outfile = "{}_serp_{}_webscrape.json".format(paper_name, query.replace(" ", "_"))
+        outfile = "data/{}_serp_{}_webscrape.json".format(paper_name, query.replace(" ", "_"))
         if os.path.exists(outfile):
             logger.exception("File {} already exists".format(outfile))
             raise FileExistsError
@@ -215,4 +222,4 @@ def run(query = "জলমগ্ন OR জোয়ারের OR প্লাব�
             json.dump(queryRes, f)
 
 if __name__ == "__main__":
-    run()
+    run(query="")
