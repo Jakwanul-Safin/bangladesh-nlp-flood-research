@@ -40,11 +40,15 @@ class BengaliTokenizer:
 
 def preprocess_bangla(text,  tokenizer = BengaliTokenizer(), 
                       stemmer = BengaliStemmer(), 
-                      standardizer = BengaliStandardizer()):
+                      standardizer = BengaliStandardizer(),
+                      as_tokens = True
+                      ):
     
     text = standardizer.standandize(text)
     tokens = tokenizer.tokenize(text)
     stemmed_tokens = stemmer.stem(tokens)
     
-    
-    return list(stemmed_tokens)
+    if as_tokens:
+        return list(stemmed_tokens)
+    else:
+        return " ".join(stemmed_tokens)
