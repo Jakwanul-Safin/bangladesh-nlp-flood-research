@@ -1,6 +1,4 @@
-import sys
-sys.path.append("..")
-from basic_bengali_tools import *
+from . basic_bengali_tools import bengaliTextChars, digits
 
 from bnlp import BasicTokenizer
 from bnlp.corpus import stopwords
@@ -31,7 +29,7 @@ class BengaliTokenizer:
         self.num_token = num_token
     
     def tokenize(self, text):
-        tokens = [tk for tk in tokenizer.tokenize(text) if tk not in stopwords and all(c in bengaliTextChars for c in tk)]
+        tokens = [tk for tk in tokenizer.tokenize(text) if tk not in self.stopwords and all(c in bengaliTextChars for c in tk)]
         if self.num_token == True:
             for i, tk in enumerate(tokens):
                 if len(tk) > 1 and all(c in digits for c in tk):
@@ -39,10 +37,10 @@ class BengaliTokenizer:
         return tokens
 
 def preprocess_bangla(text,  tokenizer = BengaliTokenizer(), 
-                      stemmer = BengaliStemmer(), 
-                      standardizer = BengaliStandardizer(),
-                      as_tokens = True
-                      ):
+                stemmer = BengaliStemmer(), 
+                standardizer = BengaliStandardizer(),
+                as_tokens = True
+            ):
     
     text = standardizer.standandize(text)
     tokens = tokenizer.tokenize(text)
