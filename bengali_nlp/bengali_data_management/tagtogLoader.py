@@ -47,6 +47,7 @@ class TagtogLoader:
                                           if k in self.annotations_key
                                          }
         
+        print(len(self.annotations), " annotations found")
         return self.annotations
     
     def attach_content_from_file(self):
