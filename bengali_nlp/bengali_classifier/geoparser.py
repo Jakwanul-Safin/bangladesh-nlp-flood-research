@@ -1,6 +1,7 @@
 from abc import ABC, abstractclassmethod
 from collections import defaultdict
 from ..bengali_tools.locations import get_locations
+from ..bengali_tools.bengali_preprocessing import preprocess_bangla
 
 class BengaliGeoParser(ABC):
     def __init__(self, locations = None):
@@ -12,11 +13,18 @@ class BengaliGeoParser(ABC):
         self.divisions = locations['divisions'] 
 
     @abstractclassmethod
-    def locate(self, tokens):
+    def locate(self, text):
         raise NotImplementedError()
 
+    @abstractclassmethod
+    def locations(self):
+        raise NotImplementedError
+
 class OccurrenceGeoParser(BengaliGeoParser):
-    def locate(self, tokens, level = 0, thres = 30, USE_MAX_OCCURING = False):
+    def locate(self, text, level = 0, thres = 30, USE_MAX_OCCURING = False, AS_TOKENS = False):
+        if not AS_TOKENS:
+            tokens = preprocess_bangla(text)
+    
         div, dis, upa = self.votes(tokens)
         if level == 0:
             n = sum(div.values())
@@ -26,6 +34,9 @@ class OccurrenceGeoParser(BengaliGeoParser):
 
         return tuple(k for k in div.keys() if div[k]/n *100 > thres)
     
+    def locations(self, level = 0):
+        return set(self.divisions.values())
+
     def votes(self, tokens):
         division_flooding = defaultdict(int)
         district_flooding = defaultdict(int)
