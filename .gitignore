@@ -22,3 +22,13 @@ progress_reports/
 article_scraping/bengali_article_scraping
 
 nytimes_articles
+
+*.csv
+*.log
+*.png
+
+*/log/*
+bengali_article_scraping/old/*
+bengali_data_management/*.ipynb
+bengali_data_management/tagtog/
+bengali_data_management/data_for_samples/
