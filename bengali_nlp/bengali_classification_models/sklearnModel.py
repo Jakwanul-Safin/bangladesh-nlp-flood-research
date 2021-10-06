@@ -17,4 +17,4 @@ class SKlearnModel(FloodClassificationModel):
             with open(os.path.join(root, "models", model_type, f"vectorizer_fold_{fold}"), 'rb') as f:
                 vect = pickle.load(f)
             return SKlearnModel(cls, vect)
-        raise NotImplementedError
+        raise NotImplementedError()

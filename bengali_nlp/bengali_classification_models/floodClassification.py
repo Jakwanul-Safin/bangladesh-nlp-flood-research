@@ -3,9 +3,17 @@ from abc import ABC, abstractclassmethod, abstractmethod
 class FloodClassificationModel(ABC):
 
     @abstractclassmethod
-    def predict(batch):
-        raise NotImplementedError
+    def predict(self, batch):
+        raise NotImplementedError()
+
+    @abstractclassmethod
+    def load_pretrained(cls, fold):
+        raise NotImplementedError()
 
     @abstractmethod
-    def load_pretrained(fold):
-        raise NotImplementedError
+    def train(self, train_data):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def test(self, test_data):
+        raise NotImplementedError()
