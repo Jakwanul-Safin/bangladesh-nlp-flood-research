@@ -7,6 +7,8 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support, cla
 
 import numpy as np, pandas as pd
 
+from bengali_classification_models.banglaBERT import BanglaBERT
+
 ROOT = ""
 NLP_ROOT = ""
 dataset_root = os.path.join(NLP_ROOT, "bengali_article_classification")
@@ -43,27 +45,68 @@ exp_tags = {
 
 exp_tag = exp_tags[ENGLISH_BENGALI_ALL]
 
-model = getMultiLingualBERT()
-
 CLTS_df = pd.read_csv(os.path.join(NLP_ROOT, "bengali_crosslingual", "CLTS_predictions.csv"), index_col=0)\
   .rename({"student_pred_id": "label"}, axis = 1)[["text", "label"]]
 
-eng_beng_training_df = pd.concat([english_training_df, bengali_training_df, CLTS_df])
-model.train_model(eng_beng_training_df)
+def get_dataset(bangla_labelled = False, bangla_unlabelled = False, english = False):
+    datasets = [bengali_training_df, CLTS_df, english_training_df]
+    to_use = [bangla_labelled, bangla_unlabelled, english]
+    return pd.concat([ds for ds, use in zip(datasets, to_use) if use]),\
+         "_".join(l for l, use in zip(['labBe', 'unlabBe', 'eng'], to_use) if use)
 
-save_file = os.path.join(ROOT, f"eng-bengali-multilingual_bert_fold_{exp_tag}.ckpt")
-torch.save(model.model.state_dict(), save_file)
+def eng_bengali_multilingual_bert_fold():
+    model = getMultiLingualBERT()
 
-true = bengali_test_df['label']
-preds, model_outputs = model.predict(list(bengali_test_df['text']))
+    eng_beng_training_df = pd.concat([english_training_df, bengali_training_df, CLTS_df])
+    model.train_model(eng_beng_training_df)
 
-print("Classification Report")
-print(classification_report(true, preds))
+    save_file = os.path.join(ROOT, f"eng-bengali-multilingual_bert_fold_{exp_tag}.ckpt")
+    torch.save(model.model.state_dict(), save_file)
 
-print("Confusion Matrix")
-print(confusion_matrix(true, preds))
+    true = bengali_test_df['label']
+    preds, model_outputs = model.predict(list(bengali_test_df['text']))
 
-acc = accuracy_score(true, preds)
-pre, rec, fsc, _ = precision_recall_fscore_support(true, preds, average = "binary")
+    print("Classification Report")
+    print(classification_report(true, preds))
 
-print(f"Accuracy: {acc}\nPrecision: {pre}\nRecall:{rec}\nF-score:{fsc}")
+    print("Confusion Matrix")
+    print(confusion_matrix(true, preds))
+
+    acc = accuracy_score(true, preds)
+    pre, rec, fsc, _ = precision_recall_fscore_support(true, preds, average = "binary")
+
+    print(f"Accuracy: {acc}\nPrecision: {pre}\nRecall:{rec}\nF-score:{fsc}")
+
+MULTILINGUAL_BERT, BANGLA_BERT = "multilingual_bert", "bangla_bert"
+def get_model(option = MULTILINGUAL_BERT):
+    if option == MULTILINGUAL_BERT:
+        return getMultiLingualBERT(), MULTILINGUAL_BERT
+    elif option == BANGLA_BERT:
+        return BanglaBERT(), BANGLA_BERT
+
+
+def run_train(model_type, bangla_labelled = False, bangla_unlabelled = False, english = False):
+    model, m_name = get_model(model_type)
+    dataset, ds_name = get_dataset(
+        bangla_labelled = bangla_labelled, 
+        bangla_unlabelled = bangla_unlabelled, 
+        english = english)
+    
+    model.train_model(dataset)
+
+    save_file = os.path.join(ROOT, f"{ds_name}-{m_name}.ckpt")
+    torch.save(model.model.state_dict(), save_file)
+
+    true = bengali_test_df['label']
+    preds, model_outputs = model.predict(list(bengali_test_df['text']))
+
+    print("Classification Report")
+    print(classification_report(true, preds))
+
+    print("Confusion Matrix")
+    print(confusion_matrix(true, preds))
+
+    acc = accuracy_score(true, preds)
+    pre, rec, fsc, _ = precision_recall_fscore_support(true, preds, average = "binary")
+
+    print(f"Accuracy: {acc}\nPrecision: {pre}\nRecall:{rec}\nF-score:{fsc}")
