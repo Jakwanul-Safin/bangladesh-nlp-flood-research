@@ -63,6 +63,12 @@ class BanglaBERT(FloodClassificationModel):
             self.model = model
         self.tokenizer = BertTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
 
+    def train():
+        pass
+
+    def test():
+        pass
+
     def collate_batch(self, batch, MAX_SEQ_LEN = 512):
         text = batch
         text_enc = self.tokenizer(text, padding="max_length", truncation=True, return_tensors = "pt", max_length=MAX_SEQ_LEN)

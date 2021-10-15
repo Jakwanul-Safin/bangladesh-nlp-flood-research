@@ -92,9 +92,11 @@ def run_train(model_type, bangla_labelled = False, bangla_unlabelled = False, en
         bangla_unlabelled = bangla_unlabelled, 
         english = english)
     
+    print(f"Training {m_name} on {ds_name}")
     model.train_model(dataset)
 
     save_file = os.path.join(ROOT, f"{ds_name}-{m_name}.ckpt")
+    print(f"Saving to {save_file}")
     torch.save(model.model.state_dict(), save_file)
 
     true = bengali_test_df['label']
