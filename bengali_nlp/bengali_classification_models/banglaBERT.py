@@ -63,6 +63,14 @@ class BanglaBERT(FloodClassificationModel):
             self.model = model
         self.tokenizer = BertTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
 
+    def collate_batch_with_labels(self, batch):
+        text, labels = zip(*batch)
+        #text = [remove_stopwords(t) for t in text]
+        text_enc = self.tokenizer(text, padding="max_length", truncation=True, return_tensors = "pt", max_length=MAX_SEQ_LEN)
+        labels_enc = torch.tensor([1 if label else 0 for label in labels])
+
+        return text_enc.to(self.device), labels_enc.to(self.device,  dtype=torch.float32)
+
     def train():
         pass
 
@@ -78,8 +86,8 @@ class BanglaBERT(FloodClassificationModel):
     def train_model(self, train_ds, batch_size = 8, use_cuda = torch.cuda.is_available()):
         from transformers import get_scheduler, AdamW
 
-        device = torch.device("cuda" if use_cuda else "cpu")
-        ds = DataLoader(BengaliNewsDataset(train_ds['text'], train_ds['label']), batch_size = batch_size, shuffle=False, collate_fn = self.collate_batch)
+        self.device = torch.device("cuda" if use_cuda else "cpu")
+        ds = DataLoader(BengaliNewsDataset(train_ds['text'], train_ds['label']), batch_size = batch_size, shuffle=False, collate_fn = self.collate_batch_with_labels)
 
         optimizer = AdamW(self.model.parameters())
 
@@ -111,7 +119,7 @@ class BanglaBERT(FloodClassificationModel):
                 t_pred, f_pred = 0, 0 
 
                 for data, target in tepoch:
-                    data, target = data.to(device), target.to(device)
+                    data, target = data.to(self.device), target.to(self.device)
 
                     optimizer.zero_grad()
                     logits_pred = self.model(data)
