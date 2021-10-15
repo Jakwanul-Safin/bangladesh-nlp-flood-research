@@ -1,0 +1,53 @@
+---
+ searches:
+  all:
+    queries:
+      - "\"জলমগ্ন\""
+      - "\"জোয়ারের\""
+      - "\"প্লাবিত\""
+      - "\"বন্যা\""
+      - "\"জলাবদ্ধ\""
+      - "\"উজান\""
+      - "\"ঘূর্ণিঝড়\""
+      - "\"নদী\""
+      - "\"ভাঙ্গন\""
+      - "\"বাঁধ\""
+      - "\"বেড়িবাঁধ\""
+      - "\"পোল্ডার\""
+    papers:
+      - 'prothom_alo'
+      - 'the_daily_janakantha'
+      - 'kaler_kantho'
+      - 'the_daily_jugantor'
+      - 'the_daily_ittefaq'
+      - 'samakal'
+      - 'amader_shomoy'
+      - 'bhorer_kagoj'
+      - 'daily_manab_zamin'
+      - 'alokito_bangladesh'
+      - 'the_sangbad'
+      - 'the_daily_inqilab'
+      - 'jaijaidin'
+      - 'daily_naya_diganta'
+      - 'the_azadi'
+      - 'daily_sangram'
+      - 'sangbad_pratidin'
+      - 'the_daily_star'
+      - 'bd_news'
+
+    date_ranges: 
+      - ["1/1/1996", "12/31/2009", 1460]
+      - ["1/1/2010", "12/31/2021", 420]
+
+ output_dir: "data"
+ output_file: "exact_serp.csv"
+ completed_searches_file: "date/exact_serp_completed"
+ overwrite: False
+ skip_existing: True
+
+ searchnws: False
+ gl: "bd"
+ hl: "bn"
+ filter: '0'
+ num: 100
+ SERPAPI_KEY: "c8f7c4a413d768d9b454c42f233867c4bf3f4dba7be4b31bae4ed7b9b05dd268"

@@ -1,0 +1,81 @@
+---
+ searches:
+  all:
+    queries:
+      - "\"বন্যা\""
+    papers:
+      - 'daily_azadi'
+      - 'dhaka_tribune'
+      - 'daily_karatoa'
+      - 'somoyer_kantha'
+      - 'protidiner_sangbad'
+      - 'ajker_patrika'
+      - 'amar_noakhali'
+      - 'laksmipur_24'
+      - 'daily_amar_sangbad'
+      - 'ajkaler_khobor'
+      - 'satkhira_news'
+      - 'dainik_sylhet'
+      - 'amadar_orthoneeti'
+      - 'vorer_pata'
+      - 'sorejomin_barta'
+      - 'business_standard'
+      - 'chadpur_times'
+      - 'prothom_feni'
+      - 'share_biz'
+      - 'daily_purbanchal'
+      - 'bangladesh_journal'
+      - 'sangbad'
+      - 'bangladesh_pratidin'
+      - 'dinajpur_news'
+      - 'daily_jagran'
+      - 'chandpurweb'
+      - 'ajker_jamalpur'
+      - 'gramer_kagoj'
+      - 'sangbad_konika'
+      - 'natun_barta'
+      - 'ajker_bazar'
+      - 'daily_purbokone'
+      - 'mymensingh_pratidin'
+      - 'shomoyer_alo'
+      - 'kuakata_news'
+      - 'arthoniteer_kagoj'
+      - 'khulnanchal'
+      - 'desh_rupantor'
+      - 'chakaria_news'
+      - 'daily_star'
+      - 'khulna_news'
+      - 'bogra_sangbad'
+      - 'mukto_khobor_24'
+      - 'amader_comilla'
+      - 'uttorpurbo'
+      - 'bangladesher_khabor'
+      - 'daily_suprobhat'
+      - 'rajshahi_news_24'
+      - 'daily_bartoman'
+      - 'manob_kantha'
+      - 'bonik_barta'
+      - 'rajshahir_somoy'
+      - 'bangladesh_post'
+      - 'andoloner_bazar'
+      - 'khabar_patra'
+      - 'dhakar_dak'
+      - 'khola_kagoj'
+      - 'matha_bhanga'
+      - 'amar_desh'
+
+    date_ranges: 
+      - ["1/1/1996", "12/31/2021", 36500]
+
+ output_dir: "data"
+ output_file: "site_check.csv"
+ completed_searches_file: "data/site_check_completed"
+ overwrite: False
+ skip_existing: True
+
+ searchnws: False
+ gl: "bd"
+ hl: "bn"
+ filter: '0'
+ num: 100
+ SERPAPI_KEY: "482d57e647d3e2fba36e5fc5ca16a4d9a68167b6ad24a412ffa540baa4c2b04e"

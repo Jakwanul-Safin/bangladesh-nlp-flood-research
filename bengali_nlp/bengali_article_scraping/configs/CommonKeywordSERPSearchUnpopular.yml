@@ -1,0 +1,35 @@
+---
+ queries:
+  - "\"হয়েছে\""
+ papers:
+  - "the_daily_janakantha"
+  - "the_daily_jugantor"
+  - "the_daily_ittefaq"
+  - "amader_shomoy"
+  - "bhorer_kagoj"
+  - "daily_manab_zamin"
+  - "alokito_bangladesh"
+  - "the_sangbad"
+  - "the_daily_inqilab"
+  - "jaijaidin"
+  - "daily_naya_diganta"
+  - "the_azadi"
+  - "daily_sangram"
+  - "sangbad_pratidin"
+  - "the_daily_star"
+ date_ranges: 
+  - ["1/1/1996", "12/31/2015", 1825]
+  - ["1/1/2016", "12/31/2021", 50]
+
+ output_dir: "data/CommonKeyword"
+ output_file: "{paper}_serp_{query}.json"
+ quote_sub: "[RVDQUOTE]"
+ overwrite: False
+ skip_existing: True
+
+ searchnws: False
+ gl: "bd"
+ hl: "bn"
+ filter: '0'
+ num: 100
+ SERPAPI_KEY: "c8f7c4a413d768d9b454c42f233867c4bf3f4dba7be4b31bae4ed7b9b05dd268"

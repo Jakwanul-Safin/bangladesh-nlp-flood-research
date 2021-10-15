@@ -1,0 +1,8 @@
+reporting:
+  stored_procs:
+    reportingsp:
+      uses:
+        usedin: breadcrumb
+    secondProc:
+      uses:
+        usedin: something_else
