@@ -20,7 +20,8 @@ def getMultiLingualBERT(
         num_train_epochs=5,
         max_seq_length=512,
         no_save = True,
-        overwrite_output_dir=True
+        overwrite_output_dir=True,
+        train_batch_size = 4
     )
   ):
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
