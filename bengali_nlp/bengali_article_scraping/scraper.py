@@ -1,9 +1,6 @@
 from abc import ABC, abstractclassmethod
 from collections import defaultdict
 
-import sys
-sys.path.insert(0, '..')
-
 import pandas as pd
 import re
 
@@ -14,9 +11,9 @@ import urllib
 from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup
 
-import logging
+from bengali_tools import translateBengaliDate
 
-from basicBanglaTools import *
+import logging
 
 logger = logging.getLogger('Scraping Links')
 logger.setLevel(logging.DEBUG)
