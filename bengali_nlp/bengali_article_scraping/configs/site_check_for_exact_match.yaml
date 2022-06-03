@@ -78,4 +78,4 @@
  hl: "bn"
  filter: '0'
  num: 100
- SERPAPI_KEY: "482d57e647d3e2fba36e5fc5ca16a4d9a68167b6ad24a412ffa540baa4c2b04e"
+ SERPAPI_KEY: [KEY]

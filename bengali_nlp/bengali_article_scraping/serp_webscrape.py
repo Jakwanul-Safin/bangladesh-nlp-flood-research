@@ -20,7 +20,7 @@ from logging.handlers import RotatingFileHandler
 from serpapi import GoogleSearch
 
 root_folder = 'data/serp'
-SERPAPI_KEY = "c8f7c4a413d768d9b454c42f233867c4bf3f4dba7be4b31bae4ed7b9b05dd268"
+SERPAPI_KEY = [KEY]
 
 # Logger for full SERP Queries
 queryLogger = logging.getLogger('SERP Queries')
